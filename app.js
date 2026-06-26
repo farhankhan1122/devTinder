@@ -5,6 +5,30 @@ const User = require('./models/user.js')
 const app = express()
 app.use(express.json())
 
+// get one user by email
+app.get('/user',async (req,res) => {
+    const userEmail = req.body.email
+    const users = await User.findOne({email: userEmail})
+    if(users.length === 0){
+        res.status(404).send("user not found")
+    }else {
+        res.send(users)
+        console.log("user found")
+    }
+
+})
+
+
+// get all users from db
+app.get('/feed', async (req, res) => {
+    try {
+        const users = await User.find({})
+        res.send(users)
+    } catch(err) {  
+        res.status(400).send('No user found')
+    }
+})
+
 app.post('/signup', async (req, res) => {
     // creating a new instance of user model
     // console.log(req.body)
