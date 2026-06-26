@@ -1,6 +1,39 @@
 const express = require('express')
+const connectDB = require('./config/database')
+const User = require('./models/user.js')
 
 const app = express()
+
+app.post('/signup', async (req, res) => {
+    const user = new User({
+        firstName: "Rohit",
+        lastName: "Gautam",
+        email: "rohit@gmail.com",
+        password: "rohit@123"
+    })
+    try {
+        await user.save()
+        res.send("User added successfully")
+    } catch (err) {
+        res.status(400).send(`Error occured while adding user + ${err.message}`)
+    }
+})
+
+
+
+
+
+connectDB()
+    .then(() => {
+        console.log('database connected successfully')
+        app.listen(7777, () => {
+            console.log("server is now running")
+        })
+    })
+    .catch((err) => {
+        console.error('database is not connected')
+    })
+
 
 // app.use('/contact', (_req, res) => {
 //     res.send("This is contact page")
@@ -52,12 +85,7 @@ const app = express()
 //     }
 // )
 
-app.use('/admin', (req,res) => {
-    res.send("admin")
-})
+// app.use('/admin', (req,res) => {
+//     res.send("admin")
+// })
 
-
-
-app.listen(7777, () => {
-    console.log("server is now running")
-})
