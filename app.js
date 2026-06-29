@@ -3,7 +3,21 @@ const connectDB = require('./config/database')
 const User = require('./models/user.js')
 
 const app = express()
+// convert json to object
 app.use(express.json())
+
+// get user using findById
+app.get('/user/:id', async (req,res) => {
+    try {
+        const userById = await User.findById(req.params.id)
+        if(!userById) return res.status(404).send('user not found')
+        console.log(userById)
+        res.send(userById)
+        
+    } catch(err) {
+        res.status(404).send('user not found with this Id')
+    }
+})
 
 // get one user by email
 app.get('/user',async (req,res) => {
@@ -19,7 +33,7 @@ app.get('/user',async (req,res) => {
 })
 
 
-// get all users from db
+// Feed API - GET /feed - get all the users from the database 
 app.get('/feed', async (req, res) => {
     try {
         const users = await User.find({})
